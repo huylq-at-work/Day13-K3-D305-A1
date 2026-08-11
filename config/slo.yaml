@@ -2,9 +2,12 @@ service: day13-observability-lab
 window: 28d
 slis:
   latency_p95_ms:
-    objective: 3000
+    objective: 2000
     target: 99.5
-    note: Replace with your group's target
+    note: >-
+      Hạ từ mặc định 3000 xuống 2000 để khớp latency_threshold_ms của challenge
+      day13-k3-observability-v1. Với 3000 ms, sự cố rag_slow (p95 = 2651 ms) sẽ không
+      kích hoạt alert nào. Đo tách theo từng feature, không dùng số tổng.
   error_rate_pct:
     objective: 2
     target: 99.0
@@ -14,3 +17,10 @@ slis:
   quality_score_avg:
     objective: 0.75
     target: 95.0
+  probe_latency_p95_ms:
+    objective: 5000
+    target: 99.0
+    note: >-
+      Đo từ synthetic probe bên ngoài (5 request đồng thời mỗi phút). Cần SLI riêng vì
+      latency_ms do server ghi không tính thời gian request xếp hàng: trong challenge,
+      server báo 2650 ms trong khi client chờ 13281 ms.

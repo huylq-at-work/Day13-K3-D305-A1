@@ -1,19 +1,21 @@
 alerts:
-  - name: TODO_alert_1
-    severity: TODO
-    condition: TODO
+  - name: latency_p95_per_feature_breach
+    severity: critical
+    condition: 'p95(latency_ms) by feature > 2000 ms trong 5 phút liên tiếp'
     type: symptom-based
-    owner: TODO
+    owner: Role 3 - Dashboard, SLO & Alert
     runbook: docs/alerts.md#alert-1
-  - name: TODO_alert_2
-    severity: TODO
-    condition: TODO
+
+  - name: error_rate_breach
+    severity: critical
+    condition: 'count(request_failed) / count(request_received) * 100 > 2 % trong 5 phút liên tiếp'
     type: symptom-based
-    owner: TODO
+    owner: Role 1 - Logging & PII
     runbook: docs/alerts.md#alert-2
-  - name: TODO_alert_3
-    severity: TODO
-    condition: TODO
+
+  - name: synthetic_probe_latency_breach
+    severity: critical
+    condition: 'p95 latency đo từ client (synthetic probe, 5 request đồng thời mỗi phút) > 5000 ms trong 3 phút liên tiếp, HOẶC probe_latency_p95 > 3 x server latency_p95'
     type: symptom-based
-    owner: TODO
+    owner: Role 4 - Incident & Demo
     runbook: docs/alerts.md#alert-3

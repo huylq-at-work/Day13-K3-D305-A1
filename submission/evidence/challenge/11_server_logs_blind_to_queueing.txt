@@ -1,0 +1,17 @@
+# Bang chung: log phia server MU truoc tinh trang xep hang
+
+# Wall-clock = khoang cach request_received -> response_sent trong log.
+# Neu log nhin thay hang doi thi wall-clock phai lon hon nhieu so voi latency_ms.
+
+CORRELATION_ID RECEIVED       SENT              WALL_MS LATENCY_MS    CLIENT_MS
+req-ac1bd367   04:12:35.825   04:12:38.477         2652       2650         7971
+req-46f83bc9   04:12:38.480   04:12:41.133         2653       2651        10628
+req-69315f64   04:12:41.133   04:12:43.787         2654       2651        13281
+req-19a92afe   04:12:43.787   04:12:46.441         2654       2650        13281
+req-404ed61b   04:12:46.441   04:12:49.097         2656       2650        13281
+
+# Ket luan: WALL_MS ~= LATENCY_MS o moi request (chenh 2-6 ms).
+# Log server hoan toan khong thay CLIENT_MS toi 13281 ms.
+# Ly do: request_received chi duoc ghi khi handler async gianh duoc event loop,
+# nen thoi gian xep hang nam NGOAI vong doi ma log quan sat duoc.
+# => Can mot phep do tu ben ngoai (synthetic probe) - xem alert 3 trong docs/alerts.md.

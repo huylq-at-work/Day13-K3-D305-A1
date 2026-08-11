@@ -39,8 +39,8 @@
   `prompt_source`, `doc_count` và `query_preview`, nên truy ngược được request đã dùng
   prompt version nào và kiểm chứng rollback an toàn.
   **Hạn chế đã ghi nhận**: hiện `@observe` chỉ bọc `agent.run()` nên trace chỉ có một
-  span; trace nói được "chậm 3s" nhưng chưa nói được "chậm ở bước nào" — cần tách span
-  `retrieval` và `llm`.
+  span; trace nói được "chậm 2.65s" nhưng chưa nói được "chậm ở bước nào" — cần tách
+  span `retrieval` và `llm`.
 
 ## 4. Prompt versioning
 
@@ -63,14 +63,38 @@
 
 ## 5. Dashboard, SLO và alerts
 
-- Kết quả `validate_dashboard.py`: `HỢP LỆ: 6/6 panel` từ baseline (xem
-  [cp0_baseline_validate_logs.txt](evidence/cp0_baseline_validate_logs.txt));
-  _(R3 chụp lại kèm ảnh dashboard runtime)_
-- Evidence dashboard: Đã lưu ảnh chụp giao diện khi ứng dụng chạy vào `submission/evidence/dashboard_runtime.png` *(bạn nhớ tự chụp ảnh và lưu file này nhé)*.
-- SLO đã chọn và lý do: Dựa theo `config/dashboard.yaml`, SLO **Latency P95 <= 3000ms**. Lý do: Với ứng dụng Chat AI, nếu chờ quá 3 giây trải nghiệm người dùng sẽ rất tệ; 95% lượng request buộc phải trả về kết quả dưới ngưỡng này để đảm bảo chất lượng dịch vụ.
-- Alert rules và runbook:
-  - **Alert rules**: Kích hoạt khi *P95 Latency > 3000ms* trong 1 phút (hoặc Error Rate > 2%).
-  - **Runbook**: (1) Kiểm tra panel Errors xem có lỗi phát sinh nội bộ không. (2) Nếu error rate = 0 nhưng latency cao, mở Traces/Logs tìm `correlation_id` của request chậm nhất. (3) Khoanh vùng span tốn thời gian (thường là Agent/Retrieval) để xác định nghẽn cổ chai và áp dụng fix (ví dụ: timeout).
+- Kết quả `validate_dashboard.py`: `HỢP LỆ: 6/6 panel` (xem
+  [cp0_baseline_validate_logs.txt](evidence/cp0_baseline_validate_logs.txt))
+- Evidence dashboard: [`evidence/dashboard_runtime.png`](evidence/dashboard_runtime.png)
+  — dashboard Streamlit (`scripts/dashboard.py`) đọc threshold trực tiếp từ
+  `config/dashboard.yaml`, có time range, đơn vị và threshold line.
+- SLO đã chọn và lý do: **`latency_p95_ms` = 2000 ms, đo tách theo từng `feature`**
+  (`config/slo.yaml`), cùng `error_rate_pct` ≤ 2 %, `quality_score_avg` ≥ 0.75 và
+  `daily_cost_usd` ≤ 2.5.
+
+  Nhóm **hạ ngưỡng latency từ mặc định 3000 ms xuống 2000 ms** sau khi đối chiếu với
+  kết quả challenge. Lý do rất cụ thể: sự cố `rag_slow` làm p95 lên **2651 ms** —
+  **vẫn dưới 3000 ms**, nên bộ ngưỡng mặc định sẽ không kích hoạt alert nào, trong khi
+  feature `refund` đã hỏng hoàn toàn và người dùng chờ tới 13 giây. Ngưỡng 2000 ms khớp
+  đúng `latency_threshold_ms` mà challenge quy định. Việc đo tách theo feature cũng là
+  bắt buộc: p50 toàn hệ thống trong sự cố **không nhúc nhích** (150 ms → 150 ms) vì chỉ
+  5/16 request thuộc `refund`.
+
+  Nhóm bổ sung thêm một SLI mới là **`probe_latency_p95_ms`** đo từ bên ngoài, vì
+  `latency_ms` do server ghi không phản ánh trải nghiệm thật (xem alert 3).
+- Alert rules và runbook: 3 alert trong
+  [`config/alert_rules.yaml`](../config/alert_rules.yaml), runbook đầy đủ trong
+  [`docs/alerts.md`](../docs/alerts.md):
+  1. **`latency_p95_per_feature_breach`** — p95 latency theo từng feature > 2000 ms
+     trong 5 phút. Đây là alert bắt được đúng sự cố challenge.
+  2. **`error_rate_breach`** — error rate > 2 % trong 5 phút.
+  3. **`synthetic_probe_latency_breach`** — probe từ client > 5000 ms, hoặc
+     probe p95 > 3× server p95. Alert này tồn tại vì một phát hiện quan trọng:
+     **không log hay metric phía server nào nhìn thấy sự cố thật**. Đo trên log
+     challenge, khoảng cách `request_received` → `response_sent` là 2652–2656 ms, khớp
+     gần như tuyệt đối với `latency_ms` (2650–2651 ms), trong khi client chờ 13281 ms —
+     vì `request_received` chỉ được ghi khi handler async giành được event loop, nên
+     thời gian xếp hàng nằm ngoài tầm nhìn của log.
 
 ## 6. Điều tra challenge
 
@@ -126,5 +150,5 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 |---|---|---|---|
 | Nguyễn Chí Hướng — 2A202601203 | Correlation ID middleware; JSON log enrichment; hash user ID; PII redaction; tests và evidence Checkpoint 1 | `5d55476` | Correlation ID cần được validate/propagate xuyên suốt request; PII phải được scrub ở processor cuối trước khi render JSON. |
 | Phạm Thị Liên — 2A202601795 | Role 2 — tracing, prompt v1/v2, label/rollback | | |
-| Nguyễn Tiến Đạt — 2A202601387 | Role 3 — dashboard 6 panel, SLO, alert, runbook | `fc1d31b` | Hiểu rõ cách trực quan hóa dữ liệu từ Log thành Dashboard; nắm được tầm quan trọng của SLO và việc gắn metrics với ngữ cảnh người dùng. |
-| Lê Quang Huy — 2A202601821 | Role 4 — setup baseline, practice + challenge incident, report, demo | `0cf830e`, `1ed3698` | Metrics chỉ nói "có sự cố", trace nói "chậm ở đâu", log mới chứng minh được nguyên nhân — thiếu một tầng là mất bằng chứng. |
+| Nguyễn Tiến Đạt — 2A202601387 | Role 3 — dashboard Streamlit 6 panel đọc threshold từ `config/dashboard.yaml`, ảnh runtime | `fc1d31b` (PR #2) | Hiểu rõ cách trực quan hóa dữ liệu từ Log thành Dashboard; nắm được tầm quan trọng của SLO và việc gắn metrics với ngữ cảnh người dùng. |
+| Lê Quang Huy — 2A202601821 | Role 4 — setup baseline; practice incident; chạy challenge chính thức; nối Metrics → Traces → Logs; SLO, alert rules và runbook dựa trên kết quả challenge; report, checklist và kịch bản demo | `0cf830e`, `1ed3698`, `7b5e615`, `ff3b149` | Metrics chỉ nói "có sự cố", trace nói "chậm ở đâu", log mới chứng minh được nguyên nhân. Bài học lớn nhất: **chính bộ đo cũng có thể mù** — server báo 2.65s trong khi người dùng chờ 13.3s, và không log nào phía server chứa thông tin để phát hiện ra điều đó. |

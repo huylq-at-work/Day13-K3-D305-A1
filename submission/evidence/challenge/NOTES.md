@@ -121,7 +121,15 @@ chờ 13.3s.
 
 Đo lường cũng có lỗ hổng: `latency_ms` chỉ tính thời gian `agent.run()`, **không tính
 thời gian request nằm chờ trong hàng đợi**, nên metrics báo 2.65s trong khi người dùng
-thật chịu 13.3s. Dashboard sẽ không bao giờ thấy con số 13.3s đó.
+thật chịu 13.3s.
+
+`11_server_logs_blind_to_queueing.txt` cho thấy vấn đề còn sâu hơn: **không chỉ
+`latency_ms` sai, mà cả bản thân log cũng không chứa thông tin để sửa lại.** Khoảng cách
+wall-clock giữa `request_received` và `response_sent` là 2652–2656ms — khớp gần như
+tuyệt đối với `latency_ms`, không hề lộ ra 13.3s. Lý do: `request_received` chỉ được ghi
+khi handler async cuối cùng giành được event loop, nên **thời gian xếp hàng nằm ngoài
+vòng đời mà log quan sát được**. Chỉ một phép đo từ bên ngoài (synthetic probe) mới thấy
+được.
 
 ## Fix action
 
