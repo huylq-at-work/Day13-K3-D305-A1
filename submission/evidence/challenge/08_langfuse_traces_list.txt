@@ -1,0 +1,20 @@
+# Danh sach traces tren Langfuse (region JP) — lay qua GET /api/public/traces
+# Tong so: 16 traces
+
+TRACE_ID                           SESSION_ID           LATENCY   PROMPT_SOURCE  TAGS
+530c6f1f83940f8b26782072982f7c33   k3-challenge-s04     3.111     local-fallback claude-sonnet-4-5,lab,refund
+ca9e3182e968700466dbb58f8c2f03e3   k3-challenge-s03     3.047     local-fallback claude-sonnet-4-5,lab,refund
+173e4f72399f4fe2e869d004b5ee4938   k3-challenge-s02     3.024     local-fallback claude-sonnet-4-5,lab,refund
+153637112f32ff41e625692a66087d89   k3-challenge-s01     3.054     local-fallback claude-sonnet-4-5,lab,refund
+a84f1d6e49d2d64472358dbc185fdfc0   k3-challenge-s05     3.095     local-fallback claude-sonnet-4-5,lab,refund
+bde15de14483d691f3dff1a258e184cb   s10                  0.559     local-fallback claude-sonnet-4-5,lab,qa
+756e5a2019d84970fb8d72e8613494a5   s09                  0.542     local-fallback claude-sonnet-4-5,lab,qa
+aac7b1a26998d5a507cdbdc88d98edbd   s08                  0.59      local-fallback claude-sonnet-4-5,lab,qa
+3e43df9237a1a7a48b0fb221c0b0d66f   s07                  0.572     local-fallback claude-sonnet-4-5,lab,qa
+e8e7e8d11cf6dabf81c66244d9e3ccd9   s06                  0.556     local-fallback claude-sonnet-4-5,lab,summary
+d5dc0aa0eb95428e15455fdc13dfdcfa   s05                  0.597     local-fallback claude-sonnet-4-5,lab,qa
+c767c90f969a07ed0eef1b9cac941aab   s04                  0.557     local-fallback claude-sonnet-4-5,lab,qa
+c3ad9e70e7bf3875d798e29be8c23f79   s03                  0.572     local-fallback claude-sonnet-4-5,lab,summary
+12bab9cd0ba932832baa21dbf2ff5b98   s02                  0.57      local-fallback claude-sonnet-4-5,lab,qa
+2527dbf41e1b8bfc8833b2ddd06b180a   s01                  0.546     local-fallback claude-sonnet-4-5,lab,qa
+e1b95d8c69aea87435e27fea4eb5150c   smoke-s01            0.559     local-fallback claude-sonnet-4-5,lab,qa
