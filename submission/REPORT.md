@@ -29,8 +29,11 @@
 
 - Evidence correlation ID: [`evidence/checkpoint-1-logging-pii.md`](evidence/checkpoint-1-logging-pii.md)
 - Evidence PII redaction: [`evidence/checkpoint-1-logging-pii.md`](evidence/checkpoint-1-logging-pii.md)
-- Evidence trace waterfall: [`evidence/checkpoint-2-tracing-prompt-versioning.md`](evidence/checkpoint-2-tracing-prompt-versioning.md)
-  và [09_trace_detail_slowest.json](evidence/challenge/09_trace_detail_slowest.json)
+- Evidence trace waterfall: ảnh [`evidence/prompt_ver1.jpg`](evidence/prompt_ver1.jpg)
+  và [`evidence/prompt_ver2.jpg`](evidence/prompt_ver2.jpg) (cây span kèm metadata);
+  dữ liệu trace challenge trong
+  [09_trace_detail_slowest.json](evidence/challenge/09_trace_detail_slowest.json) và
+  [`evidence/checkpoint-2-tracing-prompt-versioning.md`](evidence/checkpoint-2-tracing-prompt-versioning.md)
 - Giải thích một span đáng chú ý: span `run` (generation) liên kết câu trả lời với
   managed prompt. Metadata gồm `prompt_name`, `prompt_label`, `prompt_version`,
   `prompt_source`, `doc_count` và `query_preview`, nên truy ngược được request đã dùng
@@ -48,7 +51,15 @@
   - baseline v1: `7e89ea3111f42b814ad5b735b07d2f5f`
   - candidate v2: `fc60baea1602e9759d9807b9bcd15a01`
   - production sau rollback về v1: `bd16ddb65d4569681c162a85717e1023`
+- Ảnh trace từng version: [`evidence/prompt_ver1.jpg`](evidence/prompt_ver1.jpg)
+  (trace `7e89ea31…`, v1 label `baseline`) và
+  [`evidence/prompt_ver2.jpg`](evidence/prompt_ver2.jpg)
+  (trace `fc60baea…`, v2 label `candidate`) — cả hai đều `prompt_source=langfuse`
+- Ảnh danh sách prompt: [`evidence/prompt_rollback.jpg`](evidence/prompt_rollback.jpg)
+  — `day13-chat` có 2 version
 - Bằng chứng đổi label hoặc rollback: [`evidence/checkpoint-2-tracing-prompt-versioning.md`](evidence/checkpoint-2-tracing-prompt-versioning.md)
+  (label switch `production` → v2 rồi rollback về v1, kèm trace
+  `bd16ddb65d4569681c162a85717e1023` chạy sau rollback)
 
 ## 5. Dashboard, SLO và alerts
 
