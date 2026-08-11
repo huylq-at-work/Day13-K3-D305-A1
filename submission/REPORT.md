@@ -5,19 +5,19 @@
 - Tên nhóm:
 - Repository URL:
 - Commit SHA cuối:
-- Thành viên và vai trò:
+- Thành viên và vai trò: Nguyễn Chí Hướng — 2A202601203 — Logging & PII
 
 ## 2. Kết quả kỹ thuật
 
-- Điểm `validate_logs.py`:
+- Điểm `validate_logs.py`: 100/100
 - Tổng số traces:
-- Số PII leak còn lại:
+- Số PII leak còn lại: 0 trong 21 log records của Checkpoint 1
 - Link/đường dẫn dashboard:
 
 ## 3. Logging và tracing
 
-- Evidence correlation ID:
-- Evidence PII redaction:
+- Evidence correlation ID: [`evidence/checkpoint-1-logging-pii.md`](evidence/checkpoint-1-logging-pii.md)
+- Evidence PII redaction: [`evidence/checkpoint-1-logging-pii.md`](evidence/checkpoint-1-logging-pii.md)
 - Evidence trace waterfall:
 - Giải thích một span đáng chú ý:
 
@@ -52,4 +52,4 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
-| | | | |
+| Nguyễn Chí Hướng — 2A202601203 | Correlation ID middleware; JSON log enrichment; hash user ID; PII redaction; tests và evidence Checkpoint 1 | Branch `logging-and-pii` (điền commit SHA sau khi commit) | Correlation ID cần được validate/propagate xuyên suốt request; PII phải được scrub ở processor cuối trước khi render JSON. |
