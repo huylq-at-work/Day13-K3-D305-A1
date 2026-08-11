@@ -2,6 +2,7 @@
 
 - Owner: Nguyễn Chí Hướng — 2A202601203
 - Branch: `logging-and-pii`
+- Technical commit: [`5d55476`](https://github.com/huylq-at-work/Day13-K3-D305-A1/commit/5d55476cb72a0ddd8f7782b3a3a764a9a3dc826d)
 - Validator: [`checkpoint-1-validate-logs.txt`](checkpoint-1-validate-logs.txt) — 100/100
 - Test suite: 27 passed
 
@@ -25,3 +26,11 @@ Input thử nghiệm gồm email, số điện thoại Việt Nam và số thẻ
 ```
 
 PII processor chạy sau exception/stack rendering và ngay trước khi JSON được ghi, đồng thời scrub đệ quy các chuỗi ở context, payload, list và object lồng nhau.
+
+## Phạm vi source và kiểm thử
+
+- `app/middleware.py`: validate/sinh/propagate correlation ID và cô lập context.
+- `app/main.py`: bind metadata dùng chung cho toàn bộ log của request.
+- `app/logging_config.py`: scrub đệ quy trước khi JSON renderer ghi log.
+- `tests/test_logging_checkpoint.py`, `tests/test_pii.py`: kiểm tra correlation ID,
+  enrichment và các loại PII yêu cầu.
