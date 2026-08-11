@@ -16,11 +16,17 @@ API chạy sẵn ở terminal riêng, dashboard và Langfuse mở sẵn tab.
 
 ## Bước 1 — Metrics: "có chuyện gì đó"
 
-Mở dashboard, chỉ vào panel latency: p95 vượt threshold `2000ms` của challenge,
-trong khi error rate phẳng và cost/token không đổi.
+Mở dashboard ([`evidence/dashboard_runtime_incident.png`](evidence/dashboard_runtime_incident.png)),
+chỉ vào panel Latency: p95/p99 = **2651ms** trong khi p50 vẫn **150ms**, error rate
+0.00%, cost và token không đổi.
 
-> Câu chốt: "Không phải lỗi, không phải cost — đây là sự cố latency, và nó chỉ
-> đánh vào feature `refund`."
+> Câu chốt 1: "Không phải lỗi, không phải cost — đây là sự cố latency, và nó chỉ
+> đánh vào feature `refund`. p50 tổng vẫn đẹp vì chỉ 5/16 request là refund."
+
+Rồi chỉ vào **badge xanh "Thresh: 3000"** ngay dưới con số 2651.
+
+> Câu chốt 2: "Và đây là lý do nhóm hạ SLO xuống 2000ms — với ngưỡng mặc định, dashboard
+> vẫn báo xanh ngay giữa lúc sự cố đang diễn ra."
 
 ## Bước 2 — Traces: "chậm ở đâu"
 

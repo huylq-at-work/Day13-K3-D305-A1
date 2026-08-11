@@ -65,9 +65,18 @@
 
 - Kết quả `validate_dashboard.py`: `HỢP LỆ: 6/6 panel` (xem
   [cp0_baseline_validate_logs.txt](evidence/cp0_baseline_validate_logs.txt))
-- Evidence dashboard: [`evidence/dashboard_runtime.png`](evidence/dashboard_runtime.png)
-  — dashboard Streamlit (`scripts/dashboard.py`) đọc threshold trực tiếp từ
-  `config/dashboard.yaml`, có time range, đơn vị và threshold line.
+- Evidence dashboard: dashboard Streamlit (`scripts/dashboard.py`) đọc threshold trực
+  tiếp từ `config/dashboard.yaml`, có time range, đơn vị và threshold line. Hai ảnh
+  trước/sau:
+  - [`evidence/dashboard_runtime.png`](evidence/dashboard_runtime.png) — trạng thái
+    bình thường (p50 = p95 = p99 = 150 ms).
+  - [`evidence/dashboard_runtime_incident.png`](evidence/dashboard_runtime_incident.png)
+    — **trong sự cố**, đủ 6 panel: p50 150 ms, **p95/p99 2651 ms**, error 0.00 %,
+    cost $0.1461, tokens 11 607, quality 0.88.
+
+  Ảnh thứ hai là bằng chứng trực quan cho vấn đề nêu ở phần SLO bên dưới: panel Latency
+  hiển thị **badge xanh "Thresh: 3000"** dù p95 đã 2651 ms và feature `refund` đang
+  hỏng. Dashboard báo "bình thường" ngay giữa lúc sự cố diễn ra.
 - SLO đã chọn và lý do: **`latency_p95_ms` = 2000 ms, đo tách theo từng `feature`**
   (`config/slo.yaml`), cùng `error_rate_pct` ≤ 2 %, `quality_score_avg` ≥ 0.75 và
   `daily_cost_usd` ≤ 2.5.
