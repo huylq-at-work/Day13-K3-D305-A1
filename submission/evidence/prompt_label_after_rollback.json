@@ -1,0 +1,22 @@
+{
+  "moment": "sau rollback",
+  "note": "label production da tro ve version 1",
+  "versions": [
+    {
+      "version": 1,
+      "labels": [
+        "baseline",
+        "production"
+      ],
+      "updatedAt": "2026-08-11T04:49:53.561Z"
+    },
+    {
+      "version": 2,
+      "labels": [
+        "candidate",
+        "latest"
+      ],
+      "updatedAt": "2026-08-11T04:49:53.561Z"
+    }
+  ]
+}

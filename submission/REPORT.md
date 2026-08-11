@@ -63,9 +63,20 @@
   (trace `fc60baea…`, v2 label `candidate`) — cả hai đều `prompt_source=langfuse`
 - Ảnh danh sách prompt: [`evidence/prompt_rollback.jpg`](evidence/prompt_rollback.jpg)
   — `day13-chat` có 2 version
-- Bằng chứng đổi label hoặc rollback: [`evidence/checkpoint-2-tracing-prompt-versioning.md`](evidence/checkpoint-2-tracing-prompt-versioning.md)
-  (label switch `production` → v2 rồi rollback về v1, kèm trace
-  `bd16ddb65d4569681c162a85717e1023` chạy sau rollback)
+- Bằng chứng đổi label hoặc rollback:
+  [`evidence/prompt_label_rollback_NOTES.md`](evidence/prompt_label_rollback_NOTES.md)
+  — trạng thái label trước/sau lấy từ Langfuse API:
+  - Trước: `production` nằm trên **v2**
+    ([`prompt_label_before_rollback.json`](evidence/prompt_label_before_rollback.json))
+  - `PATCH /api/public/v2/prompts/day13-chat/versions/1` với `newLabels: ["production"]`
+  - Sau: `production` trở về **v1**
+    ([`prompt_label_after_rollback.json`](evidence/prompt_label_after_rollback.json)),
+    nội dung prompt quay lại template gốc ba biến
+  - Trace kiểm chứng sau rollback: **`ae40c34a858bd9966a521e02d89f7143`**
+    (session `cp2-rollback-verify`, `prompt_source=langfuse`, `prompt_version=1`,
+    `prompt_label=production`) — chứng minh rollback có hiệu lực tới đường chạy thật
+  - Mô tả thao tác gốc của R2:
+    [`evidence/checkpoint-2-tracing-prompt-versioning.md`](evidence/checkpoint-2-tracing-prompt-versioning.md)
 
 ## 5. Dashboard, SLO và alerts
 
