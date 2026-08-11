@@ -4,7 +4,8 @@
 
 - Tên nhóm: D305 (cohort K3, đề A1)
 - Repository URL: https://github.com/huylq-at-work/Day13-K3-D305-A1
-- Commit SHA cuối: _(điền lúc nộp — lấy bằng `git rev-parse HEAD`)_
+- Commit SHA cuối: `4d01a54bdd6303a411b85047621eb843ef7e5187`
+  (commit chứa toàn bộ bài làm; commit sau đó chỉ thêm đúng dòng SHA này vào báo cáo)
 - Thành viên và vai trò:
   - Nguyễn Chí Hướng — 2A202601203 — Role 1: Logging & PII
   - Phạm Thị Liên — 2A202601795 — Role 2: Tracing & Prompt Version
