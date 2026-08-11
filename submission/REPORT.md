@@ -47,21 +47,36 @@
 
 ## 6. Điều tra challenge
 
-> Đã diễn tập quy trình với practice scenario cùng loại — xem
-> [evidence/practice_rag_slow/NOTES.md](evidence/practice_rag_slow/NOTES.md).
-> Số liệu chính thức dưới đây sẽ chạy trên `main` sau khi R2–R3 merge.
+> Bằng chứng đầy đủ: [evidence/challenge/NOTES.md](evidence/challenge/NOTES.md).
+> Diễn tập trước đó: [evidence/practice_rag_slow/NOTES.md](evidence/practice_rag_slow/NOTES.md).
 
 - Challenge ID: `day13-k3-observability-v1` (incident `rag_slow`, feature `refund`,
-  threshold 2000ms)
-- Triệu chứng từ metrics: _(chạy chính thức — practice cho thấy p95 tăng
-  151ms → 2651ms, không error, cost không đổi)_
-- Trace ID liên quan: _(điền sau khi chạy chính thức, cần R2 + Langfuse key)_
-- Log line/correlation ID liên quan: _(điền sau khi chạy chính thức)_
-- Root cause: _(dự kiến từ practice: bước retrieval của RAG bị chậm ~2.5s/request —
-  flag `rag_slow` kích hoạt `time.sleep(2.5)` trong `app/mock_rag.py`, mô phỏng
-  vector store chậm; xác nhận lại bằng trace + log chính thức)_
-- Fix action: _(điền sau khi chạy chính thức)_
-- Preventive measure: _(điền sau khi chạy chính thức)_
+  `latency_threshold_ms` = 2000)
+- Triệu chứng từ metrics: p95/p99 tăng **151ms → 2651ms**, vượt threshold 2000ms;
+  error rate = 0, cost và token không đổi → sự cố latency thuần. p50 tổng vẫn 150ms
+  vì chỉ 5/15 request thuộc feature `refund`.
+  ([01_metrics_before.json](evidence/challenge/01_metrics_before.json) ↔
+  [04_metrics_during.json](evidence/challenge/04_metrics_during.json))
+- Trace ID liên quan: _(chưa có — lần chạy này `tracing_enabled: false` vì thiếu
+  Langfuse key; R2 bổ sung trace waterfall của span retrieval)_
+- Log line/correlation ID liên quan: `req-714561b0`
+  ([05_logs_by_correlation_id.jsonl](evidence/challenge/05_logs_by_correlation_id.jsonl));
+  toàn bộ 5 request `refund` trong
+  [06_all_refund_response_logs.jsonl](evidence/challenge/06_all_refund_response_logs.jsonl)
+- Root cause: bước retrieval của RAG chậm thêm ~2.5s mỗi request
+  (`app/mock_rag.py:18` — `time.sleep(2.5)` khi flag `rag_slow` bật), tự nó đã vượt SLO.
+  **Nghiêm trọng hơn**: lệnh sleep đồng bộ này nằm trong endpoint `async def`
+  (`app/main.py:46`) nên khoá event loop, khiến các request đồng thời bị xếp hàng —
+  log cho thấy 5 request gửi cùng lúc nhưng response cách nhau đúng ~2.65s, và client
+  đo **13301ms** trong khi server chỉ ghi `latency_ms: 2650`. Metrics đang under-report
+  latency thật vì chỉ đo `agent.run()`, không tính thời gian chờ hàng đợi.
+- Fix action: (1) timeout ~500ms cho retrieval kèm fallback trả lời không có context;
+  (2) đưa lời gọi chặn ra khỏi event loop (`run_in_threadpool` hoặc để `/chat` là `def`
+  thường); (3) đo `latency_ms` từ middleware để phản ánh đúng trải nghiệm người dùng.
+- Preventive measure: alert p95 **tách theo `feature`** (p50 tổng che mất sự cố của
+  `refund`); alert trên chênh lệch client-latency vs server-`latency_ms` như dấu hiệu
+  sớm của xếp hàng; quy ước review code cấm gọi hàm chặn trong endpoint `async`; load
+  test định kỳ với `--concurrency > 1` vì chạy tuần tự không bao giờ lộ lỗi này.
 
 ## 7. Đóng góp cá nhân
 

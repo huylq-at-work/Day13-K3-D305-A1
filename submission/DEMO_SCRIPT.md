@@ -46,13 +46,25 @@ nguyên văn** (email/số điện thoại đã bị che).
 
 ## Bước 4 — Root cause, fix, preventive
 
-- **Root cause:** bước retrieval của RAG bị chậm, cộng thêm ~2.5s mỗi request
-  (mô phỏng vector store timeout/degrade).
-- **Fix:** đặt timeout cho lời gọi retrieval và fallback sang câu trả lời không có
-  context thay vì chờ vô hạn.
-- **Preventive:** alert trên p95 latency theo từng feature (không chỉ toàn hệ thống),
-  vì tổng p50 vẫn đẹp trong khi `refund` đã hỏng; kèm runbook trỏ thẳng vào bước
-  Metrics → Traces → Logs này.
+Điểm nhấn của nhóm: **không dừng ở "retrieval chậm"**.
+
+- **Root cause tầng 1:** retrieval của RAG chậm thêm ~2.5s/request → tự nó đã vượt
+  SLO 2000ms.
+- **Root cause tầng 2 (phần đáng nói):** lệnh chặn đó nằm trong endpoint `async`, khoá
+  event loop. 5 request gửi đồng thời nhưng response cách nhau đúng 2.65s — client chịu
+  **13.3s** trong khi server chỉ ghi `latency_ms: 2650`. Chiếu log
+  `06_all_refund_response_logs.jsonl` lên màn hình, chỉ vào cột timestamp.
+
+> Câu chốt: "Dashboard báo 2.6s, người dùng thật chờ 13.3s. Metrics của chúng tôi
+> đang đo sai chỗ — nó không tính thời gian nằm chờ trong hàng đợi."
+
+- **Fix:** timeout + fallback cho retrieval; đưa lời gọi chặn ra khỏi event loop; đo
+  latency từ middleware thay vì chỉ bọc `agent.run()`.
+- **Preventive:** alert p95 tách theo từng feature (p50 tổng vẫn 150ms trong khi
+  `refund` đã hỏng hoàn toàn); alert trên chênh lệch client vs server latency; load test
+  luôn chạy `--concurrency > 1`.
+
+Chi tiết và số liệu: [evidence/challenge/NOTES.md](evidence/challenge/NOTES.md).
 
 ## Phân vai khi demo
 
