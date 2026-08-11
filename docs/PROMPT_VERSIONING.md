@@ -38,3 +38,13 @@ Không chấm prompt nào “hay hơn”. Điểm nằm ở khả năng truy xu�
 - Hai trace ID chứng minh hai version/label khác nhau.
 - Một ảnh trước/sau khi đổi label hoặc rollback `production`.
 - Ghi các ID và đường dẫn ảnh vào `submission/REPORT.md`.
+
+## CP2 Role 2 execution notes
+
+- Owner: Liên.
+- Prompt name: `day13-chat`.
+- Version 1 labels: `baseline`, `production`.
+- Version 2 label: `candidate`.
+- Rollback status: đã chuyển `production` sang version 2, sau đó rollback về version 1.
+- Trace evidence: [`submission/evidence/checkpoint-2-tracing-prompt-versioning.md`](../submission/evidence/checkpoint-2-tracing-prompt-versioning.md).
+- Report fields updated: [`submission/REPORT.md`](../submission/REPORT.md), sections 2, 3, 4 và 7.
