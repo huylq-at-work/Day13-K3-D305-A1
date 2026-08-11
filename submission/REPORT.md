@@ -51,6 +51,12 @@
   - baseline v1: `7e89ea3111f42b814ad5b735b07d2f5f`
   - candidate v2: `fc60baea1602e9759d9807b9bcd15a01`
   - production sau rollback về v1: `bd16ddb65d4569681c162a85717e1023`
+- Ảnh hai prompt version: [`evidence/prompt_baseline.jpg`](evidence/prompt_baseline.jpg)
+  (v1 — labels `production` + `baseline`, template 3 biến) và
+  [`evidence/prompt_candidate.jpg`](evidence/prompt_candidate.jpg)
+  (v2 — labels `latest` + `candidate`, thêm dòng `Answer style: concise,
+  evidence-first, include one observable signal.`). Hai ảnh cho thấy rõ v1 và v2 khác
+  nhau ở đúng một thay đổi, và label nằm trên version nào.
 - Ảnh trace từng version: [`evidence/prompt_ver1.jpg`](evidence/prompt_ver1.jpg)
   (trace `7e89ea31…`, v1 label `baseline`) và
   [`evidence/prompt_ver2.jpg`](evidence/prompt_ver2.jpg)
@@ -158,6 +164,6 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
 | Nguyễn Chí Hướng — 2A202601203 | Correlation ID middleware; JSON log enrichment; hash user ID; PII redaction; tests và evidence Checkpoint 1 | `5d55476` | Correlation ID cần được validate/propagate xuyên suốt request; PII phải được scrub ở processor cuối trước khi render JSON. |
-| Phạm Thị Liên — 2A202601795 | Role 2 — tracing, prompt v1/v2, label/rollback | | |
+| Phạm Thị Liên — 2A202601795 | Tracing; tạo prompt managed `day13-chat` trên Langfuse; prompt v1/v2 với label `baseline`/`candidate`/`production`; label switch và rollback; trace metadata và ảnh evidence Checkpoint 2 | `6b7d385` (PR #1), `f4f5f50` (PR #3), `ba6e747` (PR #4) | Trace metadata phải gắn prompt name, label và version thì mới truy ngược được request đã dùng prompt nào; label là thứ cho phép rollback mà không cần sửa code hay redeploy. |
 | Nguyễn Tiến Đạt — 2A202601387 | Role 3 — dashboard Streamlit 6 panel đọc threshold từ `config/dashboard.yaml`, ảnh runtime | `fc1d31b` (PR #2) | Hiểu rõ cách trực quan hóa dữ liệu từ Log thành Dashboard; nắm được tầm quan trọng của SLO và việc gắn metrics với ngữ cảnh người dùng. |
 | Lê Quang Huy — 2A202601821 | Role 4 — setup baseline; practice incident; chạy challenge chính thức; nối Metrics → Traces → Logs; SLO, alert rules và runbook dựa trên kết quả challenge; report, checklist và kịch bản demo | `0cf830e`, `1ed3698`, `7b5e615`, `ff3b149` | Metrics chỉ nói "có sự cố", trace nói "chậm ở đâu", log mới chứng minh được nguyên nhân. Bài học lớn nhất: **chính bộ đo cũng có thể mù** — server báo 2.65s trong khi người dùng chờ 13.3s, và không log nào phía server chứa thông tin để phát hiện ra điều đó. |
