@@ -1,0 +1,23 @@
+{
+  "id": "91c8f0a41ee71bc7b766fed41c86933a",
+  "sessionId": "k3-challenge-s03",
+  "userId": "b7fde6ae11b0",
+  "latency_seconds": 2.656,
+  "metadata": {
+    "prompt_name": "day13-chat",
+    "prompt_label": "production",
+    "prompt_version": 1,
+    "prompt_source": "langfuse",
+    "doc_count": 1,
+    "query_preview": "Explain the refund window and required evidence."
+  },
+  "observations": [
+    {
+      "type": "GENERATION",
+      "name": "run",
+      "startTime": "2026-08-11T04:12:46.441Z",
+      "endTime": "2026-08-11T04:12:49.097Z",
+      "latency_seconds": 2.656
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+# Danh sach traces - project chung cua nhom (Langfuse Cloud, region EU)
+# Tong so trace trong project: 60
+# Challenge day13-k3-observability-v1: 5 trace
+
+TRACE_ID                           SESSION_ID         LATENCY  SOURCE    VERSION  LABEL
+91c8f0a41ee71bc7b766fed41c86933a   k3-challenge-s03   2.656    langfuse  1        production
+ccff69ab9017cab83395887ee82b9dff   k3-challenge-s05   2.654    langfuse  1        production
+0d61d1ff8a11a07a8e2862d529a3550e   k3-challenge-s02   2.654    langfuse  1        production
+8615396b7dcefc9f944ee2b9fa802259   k3-challenge-s01   2.653    langfuse  1        production
+b723bbfd0ee63c07dbd8f13cffe78e35   k3-challenge-s04   2.652    langfuse  1        production
+
+# Traffic nen cung dot chay (de so sanh):
+TRACE_ID                           SESSION_ID         LATENCY
+567e2765e41436c5485f316f7ee239b1   s10                0.158
+91029c1971845f6340568b4963d5a138   s09                0.153
+32752e3aad3056033775245fb95d8af5   s08                0.152
+47082639a54070f7f31ecea3f204b492   s07                0.151
+e90ad87d35bf9e16f65a3dddfee8cf27   s06                0.158
+8cbc788ea79633a5a6eb8babdb5fc692   s05                0.157
+bb0654064e15f2dab71354b4012fc312   s04                0.152
+50f471173a7b1396b70d9e3ce04ff07c   s03                0.154
+f08607995c4c4b4214d8ef21d8da3adb   s02                0.15
+f796c872e46f129e918baee7d4b9b488   s01                0.16

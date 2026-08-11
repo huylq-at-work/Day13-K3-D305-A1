@@ -51,9 +51,9 @@ nguyên văn** (email/số điện thoại đã bị che).
 - **Root cause tầng 1:** retrieval của RAG chậm thêm ~2.5s/request → tự nó đã vượt
   SLO 2000ms.
 - **Root cause tầng 2 (phần đáng nói):** lệnh chặn đó nằm trong endpoint `async`, khoá
-  event loop. 5 request gửi đồng thời nhưng response cách nhau đúng 2.65s — client chịu
-  **13.3s** trong khi server chỉ ghi `latency_ms: 2650`. Chiếu log
-  `06_all_refund_response_logs.jsonl` lên màn hình, chỉ vào cột timestamp.
+  event loop. Chiếu `10_trace_timeline_serialization.txt` lên màn hình — 5 trace gửi
+  đồng thời nhưng **mỗi trace bắt đầu đúng lúc trace trước kết thúc**. Client chịu
+  **13.3s** trong khi server chỉ ghi `latency_ms: 2650`.
 
 > Câu chốt: "Dashboard báo 2.6s, người dùng thật chờ 13.3s. Metrics của chúng tôi
 > đang đo sai chỗ — nó không tính thời gian nằm chờ trong hàng đợi."

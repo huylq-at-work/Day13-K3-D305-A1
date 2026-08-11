@@ -1,0 +1,10 @@
+# Cua so thoi gian cua 5 trace challenge - bang chung request bi xep hang
+
+START                    END                      LAT(s)  SESSION            TRACE_ID
+2026-08-11T04:12:35.825Z 2026-08-11T04:12:38.477Z 2.652   k3-challenge-s04   b723bbfd0ee63c07dbd8f13cffe78e35
+2026-08-11T04:12:38.480Z 2026-08-11T04:12:41.133Z 2.653   k3-challenge-s01   8615396b7dcefc9f944ee2b9fa802259
+2026-08-11T04:12:41.133Z 2026-08-11T04:12:43.787Z 2.654   k3-challenge-s02   0d61d1ff8a11a07a8e2862d529a3550e
+2026-08-11T04:12:43.787Z 2026-08-11T04:12:46.441Z 2.654   k3-challenge-s05   ccff69ab9017cab83395887ee82b9dff
+2026-08-11T04:12:46.441Z 2026-08-11T04:12:49.097Z 2.656   k3-challenge-s03   91c8f0a41ee71bc7b766fed41c86933a
+
+# Moi trace bat dau gan dung luc trace truoc ket thuc => chay tuan tu, khong song song.
