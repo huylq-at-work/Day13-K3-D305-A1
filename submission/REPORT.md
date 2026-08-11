@@ -23,20 +23,6 @@
 
 ## 3. Logging và tracing
 
-- Người thực hiện Logging & PII: Nguyễn Chí Hướng — 2A202601203.
-- Correlation ID: middleware chấp nhận `x-request-id` hợp lệ theo định dạng
-  `req-<8 ký tự hex>`; nếu header thiếu hoặc sai định dạng thì sinh ID mới. ID được
-  bind vào request context, dùng chung trong các log API, trả về response body/header
-  `x-request-id`, và context được xóa sau request để tránh rò rỉ giữa các request.
-- Log enrichment: trước event `request_received`, API bind `user_id_hash`,
-  `session_id`, `feature`, `model` và `env`. `user_id` chỉ được ghi dưới dạng SHA-256
-  rút gọn, không ghi nguyên văn.
-- PII redaction: processor scrub đệ quy chuỗi trong context, payload, list và object
-  lồng nhau sau bước render exception/stack nhưng trước khi render và ghi JSONL.
-  Email, số điện thoại Việt Nam và số thẻ thử nghiệm được thay bằng placeholder.
-- Kiểm thử: bổ sung test cho ID sinh mới/propagation, response headers, metadata,
-  user ID hash và redaction email/điện thoại/thẻ trong log thực tế.
-- Evidence kết quả validator: [`evidence/checkpoint-1-validate-logs.txt`](evidence/checkpoint-1-validate-logs.txt)
 - Evidence correlation ID: [`evidence/checkpoint-1-logging-pii.md`](evidence/checkpoint-1-logging-pii.md)
 - Evidence PII redaction: [`evidence/checkpoint-1-logging-pii.md`](evidence/checkpoint-1-logging-pii.md)
 - Evidence trace waterfall: _(R2)_
