@@ -19,7 +19,7 @@
   ([checkpoint-1-validate-logs.txt](evidence/checkpoint-1-validate-logs.txt))
 - Tổng số traces: _(R2 điền — tối thiểu 10)_
 - Số PII leak còn lại: 0 trong 21 log records của Checkpoint 1
-- Link/đường dẫn dashboard: _(R3 điền)_
+- Link/đường dẫn dashboard: `scripts/dashboard.py` (Local Streamlit app)
 
 ## 3. Logging và tracing
 
@@ -41,9 +41,11 @@
 - Kết quả `validate_dashboard.py`: `HỢP LỆ: 6/6 panel` từ baseline (xem
   [cp0_baseline_validate_logs.txt](evidence/cp0_baseline_validate_logs.txt));
   _(R3 chụp lại kèm ảnh dashboard runtime)_
-- Evidence dashboard: _(R3)_
-- SLO đã chọn và lý do: _(R3)_
-- Alert rules và runbook: _(R3)_
+- Evidence dashboard: Đã lưu ảnh chụp giao diện khi ứng dụng chạy vào `submission/evidence/dashboard_runtime.png` *(bạn nhớ tự chụp ảnh và lưu file này nhé)*.
+- SLO đã chọn và lý do: Dựa theo `config/dashboard.yaml`, SLO **Latency P95 <= 3000ms**. Lý do: Với ứng dụng Chat AI, nếu chờ quá 3 giây trải nghiệm người dùng sẽ rất tệ; 95% lượng request buộc phải trả về kết quả dưới ngưỡng này để đảm bảo chất lượng dịch vụ.
+- Alert rules và runbook:
+  - **Alert rules**: Kích hoạt khi *P95 Latency > 3000ms* trong 1 phút (hoặc Error Rate > 2%).
+  - **Runbook**: (1) Kiểm tra panel Errors xem có lỗi phát sinh nội bộ không. (2) Nếu error rate = 0 nhưng latency cao, mở Traces/Logs tìm `correlation_id` của request chậm nhất. (3) Khoanh vùng span tốn thời gian (thường là Agent/Retrieval) để xác định nghẽn cổ chai và áp dụng fix (ví dụ: timeout).
 
 ## 6. Điều tra challenge
 
@@ -86,5 +88,5 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 |---|---|---|---|
 | Nguyễn Chí Hướng — 2A202601203 | Correlation ID middleware; JSON log enrichment; hash user ID; PII redaction; tests và evidence Checkpoint 1 | `5d55476` | Correlation ID cần được validate/propagate xuyên suốt request; PII phải được scrub ở processor cuối trước khi render JSON. |
 | Phạm Thị Liên — 2A202601795 | Role 2 — tracing, prompt v1/v2, label/rollback | | |
-| Nguyễn Tiến Đạt — 2A202601387 | Role 3 — dashboard 6 panel, SLO, alert, runbook | | |
+| Nguyễn Tiến Đạt — 2A202601387 | Role 3 — dashboard 6 panel, SLO, alert, runbook | `fc1d31b` | Hiểu rõ cách trực quan hóa dữ liệu từ Log thành Dashboard; nắm được tầm quan trọng của SLO và việc gắn metrics với ngữ cảnh người dùng. |
 | Lê Quang Huy — 2A202601821 | Role 4 — setup baseline, practice + challenge incident, report, demo | `0cf830e`, `1ed3698` | Metrics chỉ nói "có sự cố", trace nói "chậm ở đâu", log mới chứng minh được nguyên nhân — thiếu một tầng là mất bằng chứng. |
